@@ -44,17 +44,7 @@ function draw() {
   ctx.fillText(`${opponentName}: ${opponentScore}`, canvas.width - 20, 50);
 }
 
-// Dans index.js
-
-// Ajoutez cette fonction pour détecter les changements de position de la balle
-function updateBallPosition(socket, ballX, ballY) {
-  socket.broadcast.to(socket.room).emit("ballPosition", { x: ballX, y: ballY });
-}
-
-// Modifiez la fonction update dans le fichier script.js pour inclure l'émission de la position de la balle
 function update() {
-  //   const socket = io("http://localhost:3000");
-  //   const socket = io("https://pong-ehes.onrender.com");
   ballX += dx;
   ballY += dy;
 
@@ -95,8 +85,6 @@ function update() {
     }
   }
 
-  //   socket.emit("ballPosition", { x: ballX, y: ballY });
-
   draw();
 }
 
@@ -112,7 +100,6 @@ function gameLoop() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  //   const socket = io("http://localhost:3000");
   const socket = io("https://pong-ehes.onrender.com");
   const nameInput = document.getElementById("nameInput");
   const roomInput = document.getElementById("roomInput");
