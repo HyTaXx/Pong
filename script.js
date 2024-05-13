@@ -100,7 +100,7 @@ function gameLoop() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const socket = io("http://localhost:3000");
+    const socket = io("https://pong-ehes.onrender.com");
     const nameInput = document.getElementById("nameInput");
     const roomInput = document.getElementById("roomInput");
     const joinButton = document.getElementById("joinButton");
