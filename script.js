@@ -100,7 +100,7 @@ function gameLoop() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const socket = io("https://pong-plum.vercel.app/");
+    const socket = io("https://pong-ehes.onrender.com");
     const nameInput = document.getElementById("nameInput");
     const roomInput = document.getElementById("roomInput");
     const joinButton = document.getElementById("joinButton");
