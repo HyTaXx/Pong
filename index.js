@@ -49,7 +49,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("ballPosition", (position) => {
-        socket.broadcast.emit("ballPosition", position);
+        socket.emit("ballPosition", position);
     });
 });
 
