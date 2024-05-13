@@ -13,8 +13,8 @@ let dy = -2;
 let playerRole = null;
 let playerScore = 0;
 let opponentScore = 0;
-let playerName = ""; // To store the player's name
-let opponentName = ""; // To store the opponent's name
+let playerName = ""; // Pour stocker le nom du joueur
+let opponentName = ""; // Pour stocker le nom de l'adversaire
 
 function drawPaddle(x, y) {
     ctx.fillStyle = "#fff";
@@ -48,12 +48,12 @@ function update() {
     ballX += dx;
     ballY += dy;
 
-    // Ball collision with top and bottom walls
+    // Collision avec le haut et le bas du terrain
     if (ballY + ballRadius > canvas.height || ballY - ballRadius < 0) {
         dy = -dy;
     }
 
-    // Ball collision with paddles
+    // Collision avec les raquettes
     if (
         ballX - ballRadius <= paddleWidth &&
         ballY >= playerPaddleY &&
@@ -68,7 +68,7 @@ function update() {
         dx = -dx;
     }
 
-    // Ball out of bounds
+    // Balle hors des limites
     if (ballX + ballRadius > canvas.width) {
         playerScore++;
         if (playerScore === 5) {
@@ -91,7 +91,7 @@ function update() {
 function resetBall() {
     ballX = canvas.width / 2;
     ballY = canvas.height / 2;
-    dx = -dx; // Reverse direction
+    dx = -dx; // Inverser la direction
 }
 
 function gameLoop() {
@@ -100,7 +100,7 @@ function gameLoop() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const socket = io("https://pong-ehes.onrender.com");
+    const socket = io("http://localhost:3000");
     const nameInput = document.getElementById("nameInput");
     const roomInput = document.getElementById("roomInput");
     const joinButton = document.getElementById("joinButton");
@@ -108,16 +108,16 @@ document.addEventListener("DOMContentLoaded", () => {
     joinButton.addEventListener("click", () => {
         const name = nameInput.value;
         const room = roomInput.value;
-        playerName = name; // Store the player's name
+        playerName = name; // Stocker le nom du joueur
         socket.emit("joinGame", { name, room });
     });
 
     socket.on("connect", () => {
-        console.log("Connected to server");
+        console.log("Connecté au serveur");
     });
 
     socket.on("disconnect", () => {
-        console.log("Disconnected from server");
+        console.log("Déconnecté du serveur");
     });
 
     socket.on("gameStart", (message) => {
@@ -136,16 +136,21 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.on("playerRole", (role) => {
         playerRole = role;
         if (playerRole === "left") {
-            playerName = nameInput.value; // Update player's name
+            playerName = nameInput.value; // Mettre à jour le nom du joueur
             socket.emit("playerName", playerName);
         } else {
-            opponentName = nameInput.value; // Update opponent's name
+            opponentName = nameInput.value; // Mettre à jour le nom de l'adversaire
             socket.emit("playerName", opponentName);
         }
     });
 
     socket.on("opponentName", (name) => {
         opponentName = name;
+    });
+
+    socket.on("ballPosition", (position) => {
+        ballX = position.x;
+        ballY = position.y;
     });
 
     document.addEventListener("mousemove", (e) => {
@@ -173,6 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function endGame(winner) {
-    alert(`${winner} wins the game!`);
+    alert(`${winner} remporte la partie !`);
     document.location.reload();
 }
