@@ -54,7 +54,7 @@ function updateBallPosition(socket, ballX, ballY) {
 // Modifiez la fonction update dans le fichier script.js pour inclure l'émission de la position de la balle
 function update() {
   //   const socket = io("http://localhost:3000");
-  const socket = io("https://pong-ehes.onrender.com");
+  //   const socket = io("https://pong-ehes.onrender.com");
   ballX += dx;
   ballY += dy;
 
@@ -95,7 +95,7 @@ function update() {
     }
   }
 
-  socket.emit("ballPosition", { x: ballX, y: ballY });
+  //   socket.emit("ballPosition", { x: ballX, y: ballY });
 
   draw();
 }
