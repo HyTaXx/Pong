@@ -165,7 +165,8 @@ function gameLoop() {
  * Document ready handler
  */
 document.addEventListener("DOMContentLoaded", () => {
-  const socket = io("https://pong-ehes.onrender.com");
+  const socket = io("http://localhost:3000");
+  // const socket = io("https://pong-ehes.onrender.com");
   const nameInput = document.getElementById("nameInput");
   const roomInput = document.getElementById("roomInput");
   const joinButton = document.getElementById("joinButton");
@@ -197,8 +198,9 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Socket lancement du jeu event listener
    */
-  socket.on("gameStart", (message) => {
-    console.log(message);
+  socket.on("gameStart", (names) => {
+    playerName = names[0];
+    opponentName = names[1];
     gameRunning = true;
     document.getElementById("exitButton").style.display = "block";
     document.getElementById("joinButton").style.display = "none";
@@ -228,13 +230,6 @@ document.addEventListener("DOMContentLoaded", () => {
       opponentName = nameInput.value;
       socket.emit("playerName", opponentName);
     }
-  });
-
-  /**
-   * Socket nom de l'adversaire event listener
-   */
-  socket.on("opponentName", (name) => {
-    opponentName = name;
   });
 
   /**

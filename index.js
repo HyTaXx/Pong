@@ -28,6 +28,8 @@ const io = new Server(server, {
  */
 let players = [];
 
+let playerNames = []
+
 /**
  * Handle socket connection event.
  */
@@ -43,17 +45,17 @@ io.on("connection", (socket) => {
     socket.join(room);
 
     socket.room = room;
+    playerNames.push(name)
 
     if (io.sockets.adapter.rooms.get(room).size === 2) {
       console.log("Emitting gameStart event");
-      io.to(room).emit("gameStart", "Game started");
       const clients = io.sockets.adapter.rooms.get(room);
-      let players = Array.from(clients);
+      players = Array.from(clients);
       io.to(players[0]).emit("playerRole", "left");
       io.to(players[1]).emit("playerRole", "right");
+      io.to(room).emit("gameStart", playerNames);
+      console.log("Players: ", players);
     }
-
-    console.log("Players: ", players);
   });
 
   /**
