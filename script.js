@@ -1,6 +1,7 @@
 const canvas = document.getElementById("pongCanvas");
 const ctx = canvas.getContext("2d");
 
+let gameRunning = false;
 let paddleHeight = 100;
 let paddleWidth = 15;
 let playerPaddleY = (canvas.height - paddleHeight) / 2;
@@ -13,8 +14,8 @@ let dy = -2;
 let playerRole = null;
 let playerScore = 0;
 let opponentScore = 0;
-let playerName = ""; // Pour stocker le nom du joueur
-let opponentName = ""; // Pour stocker le nom de l'adversaire
+let playerName = "";
+let opponentName = "";
 
 function drawPaddle(x, y) {
   ctx.fillStyle = "#fff";
@@ -48,12 +49,10 @@ function update() {
   ballX += dx;
   ballY += dy;
 
-  // Collision avec le haut et le bas du terrain
   if (ballY + ballRadius > canvas.height || ballY - ballRadius < 0) {
     dy = -dy;
   }
 
-  // Collision avec les raquettes
   if (
     ballX - ballRadius <= paddleWidth &&
     ballY >= playerPaddleY &&
@@ -91,10 +90,11 @@ function update() {
 function resetBall() {
   ballX = canvas.width / 2;
   ballY = canvas.height / 2;
-  dx = -dx; // Inverser la direction
+  dx = -dx;
 }
 
 function gameLoop() {
+  if (!gameRunning) return;
   update();
   requestAnimationFrame(gameLoop);
 }
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   joinButton.addEventListener("click", () => {
     const name = nameInput.value;
     const room = roomInput.value;
-    playerName = name; // Stocker le nom du joueur
+    playerName = name;
     socket.emit("joinGame", { name, room });
   });
 
@@ -122,6 +122,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   socket.on("gameStart", (message) => {
     console.log(message);
+    gameRunning = true;
+    document.getElementById("exitButton").style.display = "block";
+    document.getElementById("joinButton").style.display = "none";
     gameLoop();
   });
 
@@ -136,10 +139,10 @@ document.addEventListener("DOMContentLoaded", () => {
   socket.on("playerRole", (role) => {
     playerRole = role;
     if (playerRole === "left") {
-      playerName = nameInput.value; // Mettre à jour le nom du joueur
+      playerName = nameInput.value;
       socket.emit("playerName", playerName);
     } else {
-      opponentName = nameInput.value; // Mettre à jour le nom de l'adversaire
+      opponentName = nameInput.value;
       socket.emit("playerName", opponentName);
     }
   });
@@ -151,6 +154,27 @@ document.addEventListener("DOMContentLoaded", () => {
   socket.on("ballPosition", (position) => {
     ballX = position.x;
     ballY = position.y;
+  });
+
+  socket.on("otherPlayerDisconnected", () => {
+    console.log("other player disconnected");
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "#fff";
+    ctx.fillText(
+      "L'autre joueur s'est déconnecté",
+      canvas.width / 1.25,
+      canvas.height / 2
+    );
+
+    gameRunning = false;
+    playerScore = 0;
+    opponentScore = 0;
+    playerName = "";
+    opponentName = "";
+    gameRunning = false;
+
+    document.getElementById("exitButton").style.display = "none";
+    document.getElementById("joinButton").style.display = "block";
   });
 
   document.addEventListener("mousemove", (e) => {
@@ -174,6 +198,28 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       socket.emit("paddleMove", { y: mouseY, player: playerRole });
     }
+  });
+
+  document.getElementById("exitButton").addEventListener("click", () => {
+    console.log("disconnect");
+    ctx.font = "30px Arial";
+
+    ctx.fillText(
+      "Vous vous êtes déconnecté",
+      canvas.width / 1.25,
+      canvas.height / 2
+    );
+
+    playerScore = 0;
+    opponentScore = 0;
+    playerName = "";
+    opponentName = "";
+    gameRunning = false;
+
+    document.getElementById("exitButton").style.display = "none";
+    document.getElementById("joinButton").style.display = "block";
+
+    socket.emit("requestDisconnect");
   });
 });
 

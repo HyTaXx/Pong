@@ -1,28 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Pong Game</title>
-        <style>
-            canvas {
-                background: #000;
-                display: block;
-                margin: 0 auto;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>Pong Game</h1>
-        <input type="text" id="nameInput" placeholder="Enter your name" />
-        <input type="text" id="roomInput" placeholder="Enter room name" />
-        <button id="joinButton">Join Game</button>
-        <canvas id="pongCanvas" width="800" height="600"></canvas>
-        <script src="script.js"></script>
-        <script
-            src="https://cdn.socket.io/4.7.5/socket.io.min.js"
-            integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
-            crossorigin="anonymous"
-        ></script>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pong Game</title>
+    <style>
+      canvas {
+        background: #212121;
+        display: block;
+        margin: 0 auto;
+        border: 5px solid #fff;
+        margin-top: 24px;
+      }
+
+      body {
+        background-color: #212121;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      h1 {
+        font-size: 28px;
+        color: #fff;
+        font-weight: 900;
+        font-family: sans-serif;
+        margin-bottom: 32px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        color: white;
+      }
+
+      .container .label {
+        font-size: 15px;
+        padding-left: 10px;
+        position: absolute;
+        top: 13px;
+        transition: 0.3s;
+        pointer-events: none;
+      }
+
+      .input,
+      button {
+        width: 200px;
+        height: 45px;
+        border: none;
+        outline: none;
+        padding: 0px 7px;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 15px;
+        background-color: transparent;
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
+          -1px -1px 6px rgba(255, 255, 255, 0.4);
+      }
+
+      .input:focus {
+        color: #fff;
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
+          -1px -1px 6px rgba(255, 255, 255, 0.4),
+          inset 3px 3px 10px rgba(0, 0, 0, 1),
+          inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+      }
+
+      .label {
+        transform: translateY(0);
+        font-family: sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      /* .container .input:valid + .label, */
+      .container .input:focus + .label {
+        transition: 0.3s;
+        padding-left: 2px;
+        transform: translateY(-35px);
+      }
+
+      /* .container .input:valid, */
+      .container .input:focus {
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
+          -1px -1px 6px rgba(255, 255, 255, 0.4),
+          inset 3px 3px 10px rgba(0, 0, 0, 1),
+          inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+      }
+
+      .inputs-container,
+      .buttons-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+
+      button:hover {
+        cursor: pointer;
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
+          -1px -1px 6px rgba(255, 255, 255, 0.4),
+          inset 3px 3px 10px rgba(0, 0, 0, 1),
+          inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+      }
+
+      #joinButton {
+        display: block;
+      }
+
+      #exitButton {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Pong Game</h1>
+    <div class="inputs-container">
+      <div class="container">
+        <input type="text" id="nameInput" class="input" />
+        <label class="label">Your name</label>
+      </div>
+      <div class="container">
+        <input type="text" id="roomInput" class="input" />
+        <label class="label">Room name</label>
+      </div>
+    </div>
+
+    <div class="buttons-container">
+      <button id="joinButton">Join Game</button>
+      <button id="exitButton">Exit Game</button>
+    </div>
+    <canvas id="pongCanvas" width="800" height="600"></canvas>
+    <script src="script.js"></script>
+    <script
+      src="https://cdn.socket.io/4.7.5/socket.io.min.js"
+      integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
